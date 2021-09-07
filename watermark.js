@@ -120,7 +120,7 @@
       otdiv =document.createElement('div');
       /*创建shadow dom*/
       otdiv.id = defaultSettings.watermark_id;
-      otdiv.setAttribute('style','pointer-events: none !important; display: block !important');
+      otdiv.setAttribute('style','pointer-events: none !important; display: block !important; opacity: 1 !important; transform:none !important;');
       /*判断浏览器是否支持attachShadow方法*/
       if(typeof otdiv.attachShadow === 'function'){
         /* createShadowRoot Deprecated. Not for use in new websites. Use attachShadow*/
@@ -266,6 +266,16 @@
 
   //监听dom是否被移除或者改变属性的回调函数
   var callback = function (records){
+    // 批量移除DOM节点
+    if(records[0]?.removedNodes[0]?.childNodes[0]?.data && records[0]?.addedNodes.length === 0){
+      loadMark(globalSetting);
+      return;
+    }
+    // 批量设置DOM节点内容为空
+    if(records[0]?.removedNodes[0]?.data != records[0]?.addedNodes[0]?.data){
+      loadMark(globalSetting);
+      return;
+    }
     if ((globalSetting && records.length === 1) || records.length === 1 && records[0].removedNodes.length >= 1) {
       loadMark(globalSetting);
       return;
